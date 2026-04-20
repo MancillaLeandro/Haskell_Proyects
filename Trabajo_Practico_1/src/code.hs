@@ -1,6 +1,9 @@
 module Library where
 import PdePreludat
 
+-- ============================
+-- ESTRUCTURA DE DATOS - TP
+-- ============================
 data Videojuego = UnVideojuego {
     titulo :: String,
     anioDeLanzamiento :: Number,
@@ -8,39 +11,45 @@ data Videojuego = UnVideojuego {
     precio :: Number
 }
 
--- FUNCIONES AUXILARES - PUNTO 1
+-- ============================
+-- FUNCIÓNES AUXILIARES - PUNTO 1
+-- ============================
 
 cantExpanciones :: Videojuego -> Number
 cantExpanciones = length.expanciones
 
 condicionDeClasico :: Videojuego -> Bool
-condicionDeClasico videojuego = cantExpanciones videojuego > 3
+condicionDeClasico = (> 3).cantExpanciones 
 
 esRetro :: Videojuego -> Bool
-esRetro videojuego = anioDeLanzamiento videojuego < 1990
+esRetro = (< 1990).anioDeLanzamiento
 
 evaluarComunidad :: Videojuego -> Bool
-evaluarComunidad videojuego = cantExpanciones videojuego == 0
+evaluarComunidad = (== 0).cantExpanciones
 
--- CALCULO DE IMPACTO - PUNTO 1
+-- ============================
+-- CALCULOS DE IMPACTO - PUNTO 1
+-- ============================
 
 clasicoReinventado :: Videojuego -> Number
-clasicoReinventado videojuego = precio videojuego * cantExpanciones videojuego
+clasicoReinventado (UnVideojuego _ _ expansiones precio) = precio * length expansiones
 
 valorDeCulto :: Videojuego -> Number
-valorDeCulto videojuego = precio videojuego + 200 * (1990 - anioDeLanzamiento videojuego)
+valorDeCulto (UnVideojuego _ anio _ precio) = precio + 200 * (1990 - anio)
 
 sinComunidad :: Videojuego -> Number
-sinComunidad = (/2).precio 
+sinComunidad (UnVideojuego _ _ _ precio) = precio / 2
 
 normaGeneral :: Videojuego -> Number
-normaGeneral videojuego = precio videojuego + 100 * cantExpanciones videojuego
+normaGeneral (UnVideojuego _ _ expanciones precio) = precio + 100 * length expanciones
 
--- FUNCION PRINCIPAL - PUNTO 1
+-- ============================
+-- FUNCIÓN PRINCIPAL - PUNTO 1
+-- ============================
 
 impactoDe :: Videojuego -> Number
 impactoDe juego 
-    | esRetro juego && condicionDeClasico juego  = clasicoReinventado juego
-    | esRetro juego                                    = valorDeCulto juego
-    | evaluarComunidad juego                           = sinComunidad juego
-    | otherwise                                             = normaGeneral juego
+    | esRetro juego && condicionDeClasico juego     = clasicoReinventado juego
+    | esRetro juego                                 = valorDeCulto juego
+    | evaluarComunidad juego                        = sinComunidad juego
+    | otherwise                                     = normaGeneral juego
