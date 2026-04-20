@@ -1,5 +1,5 @@
+module Library where
 import PdePreludat
-import Language.Haskell.TH (viaStrategy)
 
 data Videojuego = UnVideojuego {
     titulo :: String,
@@ -7,6 +7,8 @@ data Videojuego = UnVideojuego {
     expanciones :: [String],
     precio :: Number
 }
+
+-- FUNCIONES AUXILARES - PUNTO 1
 
 cantExpanciones :: Videojuego -> Number
 cantExpanciones = length.expanciones
@@ -20,6 +22,8 @@ esRetro videojuego = anioDeLanzamiento videojuego < 1990
 evaluarComunidad :: Videojuego -> Bool
 evaluarComunidad videojuego = cantExpanciones videojuego == 0
 
+-- CALCULO DE IMPACTO - PUNTO 1
+
 clasicoReinventado :: Videojuego -> Number
 clasicoReinventado videojuego = precio videojuego * cantExpanciones videojuego
 
@@ -32,9 +36,11 @@ sinComunidad = (/2).precio
 normaGeneral :: Videojuego -> Number
 normaGeneral videojuego = precio videojuego + 100 * cantExpanciones videojuego
 
+-- FUNCION PRINCIPAL - PUNTO 1
+
 impactoDe :: Videojuego -> Number
-impactoDe videojuego 
-    | esRetro videojuego && condicionDeClasico videojuego  = clasicoReinventado videojuego
-    | esRetro videojuego                                    = valorDeCulto videojuego
-    | evaluarComunidad videojuego                           = sinComunidad videojuego
-    | otherwise                                             = normaGeneral videojuego
+impactoDe juego 
+    | esRetro juego && condicionDeClasico juego  = clasicoReinventado juego
+    | esRetro juego                                    = valorDeCulto juego
+    | evaluarComunidad juego                           = sinComunidad juego
+    | otherwise                                             = normaGeneral juego
